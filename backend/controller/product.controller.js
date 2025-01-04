@@ -75,22 +75,25 @@ const updateAProduct = async (req, res) => {
 
 const deleteAProduct = async (req, res) => {
   const { id } = req.params;
-
-  const isProductAvailable = await Product.findById(id);
-
-  if (!isProductAvailable) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({
-      status: "Fail",
-      message: "Requested Product ID is not Available to Delete",
+      statsu: "Fail",
+      message: `Product with ID ${id} not Found`,
     });
   }
+  try {
+    await Product.findByIdAndDelete(id);
 
-  await Product.findByIdAndDelete(id);
-
-  return res.status(200).json({
-    status: "Success",
-    message: `Product with ID ${id} Deleteted SuccessFully`,
-  });
+    return res.status(200).json({
+      status: "Success",
+      message: `Product with ID ${id} Deleteted SuccessFully`,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "Fail",
+      message: "Server Error",
+    });
+  }
 };
 
 export { createNewProduct, getAllProducts, updateAProduct, deleteAProduct };
