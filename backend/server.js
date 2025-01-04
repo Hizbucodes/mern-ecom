@@ -15,7 +15,9 @@ app.get("/", (req, res) => {
   res.send("Server is ready");
 });
 
-app.listen(5000, () => {
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
   connectDB();
-  console.log("Server started on port: 5000");
+  console.log("Server started on port: ", PORT);
 });
